@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+<root>
+    
+<items>
+    <connect type="postgresql">
+        <username>postgres</username>
+        <mdp>Mdpprom15</mdp>
+        <databasename>framework</databasename>
+        <pilote>org.postgresql.Driver</pilote>
+        <port>5432</port>
+        <deploy>localhost</deploy>
+    </connect>
+    <connect type="mysql">
+        <username>root</username>
+        <mdp>root</mdp>
+        <databasename>test</databasename>
+        <pilote>com.mysql.cj.jdbc.Driver</pilote>
+        <port>3306</port>
+        <deploy>localhost</deploy>
+    </connect>
+</items>
+</root>
