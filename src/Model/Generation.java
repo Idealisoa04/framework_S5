@@ -7,8 +7,12 @@ package Model;
 
 import static com.sun.xml.internal.ws.model.RuntimeModeler.capitalize;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -45,7 +49,7 @@ public class Generation {
         return rep;
     }
     
-    public void createClass(String path, HashMap<String, Object> data, String type) {
+    public void createClass(String path, HashMap<String, Object> data, String type) throws IOException {
         if(type.equalsIgnoreCase("java")){
             this.createJavaClass(path, data);
         }
@@ -54,7 +58,7 @@ public class Generation {
         }
     }
     
-    public void createJavaClass(String path,HashMap<String,Object> data){
+    public void createJavaClass(String path,HashMap<String,Object> data) throws IOException{
         String[] attr_type = this.getAttributeType(data);
         String[] attr_name = this.getAttributeName(data);
         String[] attr_type_simple = this.getAttributeTypeSimple(attr_type);
@@ -119,17 +123,13 @@ public class Generation {
                 .replace("#PACKAGE_NAME#", packageName)
                 .replace("#CLASS_NAME#", className);
 
-        // √âcrire le r√©sultat dans un nouveau fichier
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path+className + ".java"))) {
-            writer.write(generatedClass);
-            System.out.println("Classe g√©n√©r√©e avec succ√®s.");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // …crire le rÈsultat dans un nouveau fichier
+        
+        this.creationFile(path, className, "java", generatedClass);
         
     }
     
-    public void createCSharpClass (String path,HashMap<String,Object> data){
+    public void createCSharpClass (String path,HashMap<String,Object> data) throws IOException{
         //setData
         String[] attr_type = this.getAttributeType(data);
         String[] attr_name = this.getAttributeName(data);
@@ -177,15 +177,31 @@ public class Generation {
                 .replace("#PACKAGE_NAME#", packageName)
                 .replace("#CLASS_NAME#", className);
 
-        // √âcrire le r√©sultat dans un nouveau fichier
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path+className + ".cs"))) {
-            writer.write(generatedClass);
-            System.out.println("Classe g√©n√©r√©e avec succ√®s.");
-        } catch (IOException e) {
-            e.printStackTrace();
+        // …crire le rÈsultat dans un nouveau fichier
+        try{
+            this.creationFile(path, className, "cs", generatedClass);
+        }catch(Exception e){
+            throw e;
         }
+        
         
     }
 
+    public void verifPath(String path) throws IOException{
+        Path directory = Paths.get(path);
+        if (!Files.exists(directory) && !Files.isDirectory(directory)) {
+            Files.createDirectories(directory);
+        }
+    }
+    
+    public void creationFile(String path,String className,String ext,String generatedClass) throws IOException{
+        this.verifPath(path);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path+className+"."+ext))) {
+            writer.write(generatedClass);
+            System.out.println("Classe gÈnÈrÈe avec succËs.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     
 }
