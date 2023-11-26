@@ -5,7 +5,6 @@
  */
 package Model;
 
-import static com.sun.xml.internal.ws.model.RuntimeModeler.capitalize;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -204,4 +203,8 @@ public class Generation {
         }
     }
     
+    public String capitalize(String avant){
+        String rep = Character.toUpperCase(avant.charAt(0)) + avant.substring(1);
+        return rep;
+    }
 }
